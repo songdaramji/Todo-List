@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getTodoList } from "../api/todoApi"; // API 호출
+import { getTodoList, patchTodoList, postTodoList } from "../api/todoApi"; // API 호출
 import CheckList from "@/components/CheckList";
 import Header from "@/components/Header";
 import Search from "@/components/Search";
@@ -9,11 +9,16 @@ type TodoItem = {
   id: number;
   name: string;
   isCompleted: boolean;
+  memo: string;
+  imageUrl: string;
 };
 
 const MainPage = () => {
   const [todoList, setTodoList] = useState<TodoItem[]>([]);
+  const [refresh, setRefresh] = useState<Boolean>(true);
+  const [name, setName] = useState<string>("");
 
+  // 할 일 리스트업
   useEffect(() => {
     const loadTodoList = async () => {
       try {
@@ -28,25 +33,57 @@ const MainPage = () => {
       }
     };
     loadTodoList();
-  }, []);
+  }, [refresh]);
 
-  const handleTodo = () => {};
+  // 할 일 상태 변경
+  const handleTodo = async (item: TodoItem) => {
+    const res = await patchTodoList(
+      "songjihyun",
+      item.id,
+      item.name,
+      item.memo,
+      item.imageUrl,
+      !item.isCompleted
+    );
+    setRefresh((prev) => !prev);
+  };
+
+  // 할 일 추가
+  const handlePost = async () => {
+    if (name.trim() === "") {
+      console.error("할 일을 입력하세요.");
+      return;
+    }
+    const res = await postTodoList("songjihyun", name);
+    setName(""); // 추가 후 이름 비우기
+    setRefresh((prev) => !prev);
+  };
+
   return (
     <div className="flex flex-col w-full">
       <div className="flex flex-col w-full items-center">
         <Header />
         <div className="flex w-full h-full mb-4 gap-1 justify-center mt-6">
-          <Search />
-          <Image
-            src="/assets/btns/addbtn.png"
-            alt="add button"
-            width={168}
-            height={56}
-          />
+          <Search name={name} editName={setName} />
+          {name == "" ? (
+            <Image
+              src="/assets/btns/addbtn.png"
+              alt="add button"
+              width={168}
+              height={56}
+            />
+          ) : (
+            <Image
+              src="/assets/btns/addLargeActive.png"
+              alt="add button"
+              width={168}
+              height={56}
+              onClick={handlePost}
+            />
+          )}
         </div>
         <div className="flex gap-4">
           <CheckList todoList={todoList} handleToggle={handleTodo} />{" "}
-          {/* CheckList에 상태 전달 */}
         </div>
       </div>
     </div>

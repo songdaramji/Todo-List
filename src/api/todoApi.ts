@@ -6,6 +6,8 @@ type TodoItem = {
   id: number;
   name: string;
   isCompleted: boolean;
+  memo: string;
+  imageUrl: string;
 };
 
 type TodoListResponse = TodoItem[];
@@ -16,7 +18,7 @@ export const getTodoList = async (
 ): Promise<AxiosResponse<TodoListResponse> | undefined> => {
   try {
     const response = await axios.get<TodoListResponse>(
-      `${API_ROUTE}/tenantId/items`
+      `${API_ROUTE}/songjihyun/items`
     );
     return response; // AxiosResponse 타입으로 반환
   } catch (error) {
@@ -26,7 +28,7 @@ export const getTodoList = async (
 };
 
 export const patchTodoList = async (
-  tenantId: string,
+  songjihyun: string,
   itemId: number,
   name: string,
   memo: string,
@@ -35,7 +37,7 @@ export const patchTodoList = async (
 ) => {
   try {
     const response = await axios.patch<TodoListResponse>(
-      `${API_ROUTE}/tenantId/items/${itemId}`, // URL 경로
+      `${API_ROUTE}/songjihyun/items/${itemId}`, // URL 경로
       {
         name, // request body에 name
         memo, // request body에 memo
@@ -45,7 +47,22 @@ export const patchTodoList = async (
     );
     return response.data; // 응답 데이터 반환
   } catch (error) {
-    console.error("할 일을 업데이트하는 데 실패했습니다.", error);
+    console.error("할 일을 수정하는 데 실패했습니다.", error);
+    return undefined;
+  }
+};
+
+export const postTodoList = async (songjihyun: string, name: string) => {
+  try {
+    const response = await axios.post<TodoListResponse>(
+      `${API_ROUTE}/songjihyun/items`, // URL 경로
+      {
+        name, // request body에 name
+      }
+    );
+    return response.data; // 응답 데이터 반환
+  } catch (error) {
+    console.error("할 일을 추가하는 데 실패했습니다.", error);
     return undefined;
   }
 };

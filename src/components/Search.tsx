@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import Image from "next/image"; // next/image 컴포넌트 import
 
-// Search 컴포넌트
-const Search = () => {
-  const [newTask, setNewTask] = useState(""); // 입력 필드 값 상태 관리
+interface SearchProps {
+  name: string;
+  editName: (name: string) => void;
+}
 
+// Search 컴포넌트
+const Search: React.FC<SearchProps> = ({ name, editName }) => {
   return (
     <div className="relative">
       {/* 이미지 */}
@@ -19,8 +22,10 @@ const Search = () => {
         type="text"
         className="absolute top-0 left-4 p-2 w-full h-full z-10"
         placeholder="할 일을 입력해주세요"
-        value={newTask}
-        onChange={(e) => setNewTask(e.target.value)}
+        value={name}
+        onChange={(e) => {
+          editName(e.target.value);
+        }}
       />
     </div>
   );
