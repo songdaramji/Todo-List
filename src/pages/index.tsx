@@ -38,7 +38,6 @@ const MainPage = () => {
   // 할 일 상태 변경
   const handleTodo = async (item: TodoItem) => {
     const res = await patchTodoList(
-      "songjihyun",
       item.id,
       item.name,
       item.memo,
@@ -54,7 +53,7 @@ const MainPage = () => {
       console.error("할 일을 입력하세요.");
       return;
     }
-    const res = await postTodoList("songjihyun", name);
+    const res = await postTodoList(name);
     setName(""); // 추가 후 이름 비우기
     setRefresh((prev) => !prev);
   };

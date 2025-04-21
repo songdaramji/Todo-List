@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link"; // next/link 컴포넌트 import
 
 type TodoItem = {
   id: number;
@@ -38,6 +39,7 @@ const CheckList: React.FC<CheckListProps> = ({ todoList, handleToggle }) => {
                 height={240}
                 className="block"
               />
+
               <span className="block text-center text-base text-slate-400">
                 할 일이 없어요.
                 <br />
@@ -58,7 +60,9 @@ const CheckList: React.FC<CheckListProps> = ({ todoList, handleToggle }) => {
                   onClick={() => handleToggle(item)}
                 />
 
-                <span>{item.name}</span>
+                <Link href={`/items/${item.id}`}>
+                  <span>{item.name}</span>
+                </Link>
               </div>
             ))
           )}
@@ -96,7 +100,7 @@ const CheckList: React.FC<CheckListProps> = ({ todoList, handleToggle }) => {
             doneList.map((item) => (
               <div
                 key={item.id}
-                className="h-[50px] rounded-[27px] border-2 bg-violet-100 border-slate-900 flex items-center px-3 py-2 gap-4"
+                className="h-[50px] rounded-[27px]  border-2 bg-violet-100 border-slate-900 flex items-center px-3 py-2 gap-4"
               >
                 {/* 체크박스 이미지를 입력 필드 위에 올리기 */}
                 <Image
@@ -106,8 +110,9 @@ const CheckList: React.FC<CheckListProps> = ({ todoList, handleToggle }) => {
                   height={32} // 이미지 크기 설정
                   onClick={() => handleToggle(item)}
                 />
-
-                <span className="line-through">{item.name}</span>
+                <Link href={`/items/${item.id}`}>
+                  <span className="line-through">{item.name}</span>
+                </Link>
               </div>
             ))
           )}
